@@ -1,10 +1,8 @@
-CREATE DATABASE  IF NOT EXISTS `faculdade` /*!40100 DEFAULT CHARACTER SET latin1 */;
-USE `faculdade`;
--- MySQL dump 10.13  Distrib 5.6.13, for Win32 (x86)
+-- MySQL dump 10.13  Distrib 5.6.24, for Win64 (x86_64)
 --
--- Host: 127.0.0.1    Database: faculdade
+-- Host: 127.0.0.1    Database: semanaacademica2015laravel
 -- ------------------------------------------------------
--- Server version	5.6.16
+-- Server version	5.6.26
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -18,27 +16,35 @@ USE `faculdade`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `users`
+-- Table structure for table `palestras`
 --
 
-DROP TABLE IF EXISTS `users`;
+DROP TABLE IF EXISTS `palestras`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `users` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `password` varchar(60) COLLATE utf8_unicode_ci NOT NULL,
-  `remember_token` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `facebook_user_id` bigint(20) unsigned NOT NULL,
-  `access_token` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `users_email_unique` (`email`),
-  KEY `users_facebook_user_id_index` (`facebook_user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+CREATE TABLE `palestras` (
+  `palestra_id` int(11) NOT NULL AUTO_INCREMENT,
+  `palestra_titulo` varchar(45) DEFAULT NULL,
+  `palestra_resumo` varchar(45) DEFAULT NULL,
+  `palestra_data` datetime DEFAULT NULL,
+  `palestrante_id` int(11) NOT NULL,
+  `palestra_categoria` varchar(45) DEFAULT NULL,
+  `created_at` int(11) DEFAULT NULL,
+  `updated_at` int(11) DEFAULT NULL,
+  PRIMARY KEY (`palestra_id`,`palestrante_id`),
+  KEY `fk_palestras_palestrantes1_idx` (`palestrante_id`),
+  CONSTRAINT `fk_palestras_palestrantes1` FOREIGN KEY (`palestrante_id`) REFERENCES `palestrantes` (`palestrante_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `palestras`
+--
+
+LOCK TABLES `palestras` WRITE;
+/*!40000 ALTER TABLE `palestras` DISABLE KEYS */;
+/*!40000 ALTER TABLE `palestras` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -49,4 +55,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2015-10-07 18:18:39
+-- Dump completed on 2015-10-26 23:49:11

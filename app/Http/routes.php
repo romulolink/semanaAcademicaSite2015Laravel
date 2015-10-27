@@ -1,5 +1,7 @@
 <?php
 
+
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -10,6 +12,74 @@
 | and give it the controller to call when that URI is requested.
 |
 */
+
+
+/*
+Route::get('/', function (SammyK\LaravelFacebookSdk\LaravelFacebookSdk $fb) {
+    
+    
+    $token = Session::get('fb_user_access_token');
+    $fb->setDefaultAccessToken($token);
+    
+    try {
+        // Requires the "read_stream" permission
+        $response = $fb->get('/me/feed?fields=id,message&limit=5');
+    } catch(Facebook\Exceptions\FacebookResponseException $e) {
+        // When Graph returns an error
+        echo 'Graph returned an error: ' . $e->getMessage();
+        exit;
+    } catch(Facebook\Exceptions\FacebookSDKException $e) {
+        // When validation fails or other local issues
+        echo 'Facebook SDK returned an error: ' . $e->getMessage();
+        exit;
+    }
+    
+    // Returns a `Facebook\FacebookResponse` object
+    $responseUser = $fb->get('/me?fields=id,name,email');
+    
+    // Page 1
+    $feedEdge = $response->getGraphEdge();
+    
+    
+    // Get the base class GraphNode from the response
+    $graphNode = $responseUser->getGraphNode();
+    
+    // Get the response typed as a GraphUser
+    $user = $responseUser->getGraphUser();
+    
+    
+    $nome = $graphNode->getField('name'); // From GraphUser
+    
+
+    // Page 2 (next 5 results)
+    $nextFeed = $fb->next($feedEdge);
+    
+    return view('welcome',[
+            'name' => $nome,
+            'feeds' => $feedEdge
+            
+    ]);
+}); */
+
+Route::get('palestras/', 'API\PalestraController@mostrar');
+
+
+Route::get('palestra/{id}', 'API\PalestraController@index');
+
+
+Route::get('/', function() {
+        return View::make('index'); // app/views/index.php
+    });
+
+
+// Restfull
+Route::resource('palestraAPI', 'API\PalestraController');
+
+Route::get('palestra/{id}/islikedbyme', 'API\PalestraController@isLikedByMe');
+Route::post('palestra/like', 'API\PalestraController@like');
+
+
+
 // Authentication routes...
 Route::get('auth/login', 'Auth\AuthController@getLogin');
 Route::post('auth/login', 'App\Http\Controllers\FacebookController@postLogin');
@@ -19,52 +89,6 @@ Route::get('auth/logout', 'Auth\AuthController@getLogout');
 Route::get('auth/register', 'Auth\AuthController@getRegister');
 Route::post('auth/register', 'Auth\AuthController@postRegister');
 
-
-Route::get('/', function (SammyK\LaravelFacebookSdk\LaravelFacebookSdk $fb) {
-	
-	
-	$token = Session::get('fb_user_access_token');
-	$fb->setDefaultAccessToken($token);
-	
-	try {
-		// Requires the "read_stream" permission
-		$response = $fb->get('/me/feed?fields=id,message&limit=5');
-	} catch(Facebook\Exceptions\FacebookResponseException $e) {
-		// When Graph returns an error
-		echo 'Graph returned an error: ' . $e->getMessage();
-		exit;
-	} catch(Facebook\Exceptions\FacebookSDKException $e) {
-		// When validation fails or other local issues
-		echo 'Facebook SDK returned an error: ' . $e->getMessage();
-		exit;
-	}
-	
-	// Returns a `Facebook\FacebookResponse` object
-	$responseUser = $fb->get('/me?fields=id,name,email');
-	
-	// Page 1
-	$feedEdge = $response->getGraphEdge();
-	
-	
-	// Get the base class GraphNode from the response
-	$graphNode = $responseUser->getGraphNode();
-	
-	// Get the response typed as a GraphUser
-	$user = $responseUser->getGraphUser();
-	
-	
-	$nome = $graphNode->getField('name'); // From GraphUser
-	
-
-	// Page 2 (next 5 results)
-	$nextFeed = $fb->next($feedEdge);
-	
-    return view('welcome',[
-    		'name' => $nome,
-    		'feeds' => $feedEdge
-    		
-    ]);
-});
 
 
 // Generate a login URL
